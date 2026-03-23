@@ -1,6 +1,8 @@
 # Portfolio Website
 
 A modern personal portfolio website built with Flask, SQLite, and a clean, responsive UI. Features a complete dashboard, blog system, project showcase, REST API, and Docker support.
+![WhatsApp Image 2026-03-23 at 7 53 03 PM](https://github.com/user-attachments/assets/1176433c-13e0-4440-9694-0da74dd57d47)
+
 
 ## Features
 
@@ -361,5 +363,3 @@ MIT License. Feel free to use this as a template for your own portfolio.
 
 Contributions are welcome. Please feel free to submit a Pull Request.
 
- 
- 
