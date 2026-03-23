@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Resume | Portfolio{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem">
+    <div>
+      <span class="section-tag">CV</span>
+      <h1 class="page-title">Resume</h1>
+      <p class="page-sub">A structured overview of technical capabilities, delivery process, and engineering focus areas.</p>
+    </div>
+    <a href="{{ url_for('public.resume_download') }}" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Download PDF
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="resume-layout">
+
+      <!-- Left Column -->
+      <div class="resume-left">
+
+        <!-- Profile -->
+        <div class="resume-card profile-card">
+          <div class="profile-avatar">AP</div>
+          <h2>Professional Portfolio</h2>
+          <p class="profile-role">Full Stack Development</p>
+          <div class="profile-contact">
+            <span>📧 contact@example.com</span>
+            <span>📍 Remote</span>
+            <span>🌐 portfolio.local</span>
+            <span>💼 github.com/example</span>
+          </div>
+          <div class="availability-badge" style="margin-top:1.25rem">
+            <span class="avail-dot"></span>
+            Open to opportunities
+          </div>
+        </div>
+
+        <div class="resume-card">
+          <h3 class="rc-title">Core Services</h3>
+          <ul class="tl-list" style="margin-top:.5rem">
+            <li>Backend API design and implementation</li>
+            <li>Frontend integration with responsive UX</li>
+            <li>Database design and query optimization</li>
+            <li>Docker-based deployment and runtime setup</li>
+            <li>Security hardening and validation workflow</li>
+          </ul>
+        </div>
+
+        <!-- Skills by Category -->
+        <div class="resume-card">
+          <h3 class="rc-title">Technical Skills</h3>
+          {% for category, cat_skills in skill_groups.items() %}
+          <div class="skill-group">
+            <h4 class="skill-group-label">{{ category }}</h4>
+            {% for skill in cat_skills %}
+            <div class="resume-skill-row">
+              <span class="rsn">{{ skill.name }}</span>
+              <div class="skill-bar" style="flex:1">
+                <div class="skill-fill" style="--pct:{{ skill.proficiency }}%"></div>
+              </div>
+              <span class="rsp">{{ skill.proficiency }}%</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+      <!-- Right Column -->
+      <div class="resume-right">
+
+        <!-- Summary -->
+        <div class="resume-card">
+          <h3 class="rc-title">Professional Summary</h3>
+          <p class="resume-summary">This resume template emphasizes practical engineering outcomes over marketing language. It focuses on architecture quality, delivery consistency, maintainable code, and clear communication throughout development cycles.</p>
+        </div>
+
+        <!-- Experience -->
+        <div class="resume-card">
+          <h3 class="rc-title">Work Experience</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-header">
+                  <div>
+                    <h4>Senior Full-Stack Developer</h4>
+                    <span class="tl-company">Product Engineering Team</span>
+                  </div>
+                  <span class="tl-date">Recent</span>
+                </div>
+                <ul class="tl-list">
+                  <li>Designed service boundaries and improved maintainability in a growing codebase</li>
+                  <li>Delivered robust APIs and dashboard features for operational workflows</li>
+                  <li>Improved code review quality and documentation consistency</li>
+                  <li>Helped standardize deployment and observability practices</li>
+                </ul>
+                <div class="tl-tags">
+                  <span class="tech-chip">Python</span><span class="tech-chip">Flask</span><span class="tech-chip">React</span><span class="tech-chip">AWS</span><span class="tech-chip">Docker</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-header">
+                  <div>
+                    <h4>Full Stack Developer</h4>
+                    <span class="tl-company">Consulting Projects</span>
+                  </div>
+                  <span class="tl-date">Previous</span>
+                </div>
+                <ul class="tl-list">
+                  <li>Built business applications across multiple domains and requirements</li>
+                  <li>Designed REST APIs used by web and mobile clients</li>
+                  <li>Implemented CI/CD workflows for predictable release delivery</li>
+                </ul>
+                <div class="tl-tags">
+                  <span class="tech-chip">Python</span><span class="tech-chip">Django</span><span class="tech-chip">PostgreSQL</span><span class="tech-chip">Vue.js</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-header">
+                  <div>
+                    <h4>Junior Developer</h4>
+                    <span class="tl-company">Data and Reporting Team</span>
+                  </div>
+                  <span class="tl-date">Earlier</span>
+                </div>
+                <ul class="tl-list">
+                  <li>Built ETL-style data pipelines and reporting automation tools</li>
+                  <li>Developed dashboards for internal analysis and decision support</li>
+                </ul>
+                <div class="tl-tags">
+                  <span class="tech-chip">Python</span><span class="tech-chip">Pandas</span><span class="tech-chip">D3.js</span><span class="tech-chip">SQL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="resume-card">
+          <h3 class="rc-title">Education</h3>
+          <div class="edu-item">
+            <div class="edu-icon">🎓</div>
+            <div>
+              <h4>Computer Science Background</h4>
+              <span class="tl-company">Formal Study and Continuous Learning</span>
+              <span class="tl-date" style="display:block;margin-top:.2rem">Ongoing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="resume-card">
+          <h3 class="rc-title">Certifications</h3>
+          <div class="cert-grid">
+            <div class="cert-item">
+              <span class="cert-icon">☁️</span>
+              <span class="cert-name">Cloud Architecture Fundamentals</span>
+              <span class="cert-year">Current</span>
+            </div>
+            <div class="cert-item">
+              <span class="cert-icon">🐳</span>
+              <span class="cert-name">Container and Runtime Operations</span>
+              <span class="cert-year">Current</span>
+            </div>
+            <div class="cert-item">
+              <span class="cert-icon">☸️</span>
+              <span class="cert-name">Scalable Deployment Practices</span>
+              <span class="cert-year">Current</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

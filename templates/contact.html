@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Contact | Portfolio{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-tag">Get in Touch</span>
+    <h1 class="page-title">Contact</h1>
+    <p class="page-sub">Share your project goals, technical requirements, or collaboration idea.</p>
+  </div>
+</section>
+
+<section class="section alt-bg">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Before You Send</span>
+      <h2 class="section-title">Helpful Details to Include</h2>
+      <p class="section-sub">Providing context upfront makes responses faster and more useful.</p>
+    </div>
+    <div class="projects-grid">
+      <article class="project-card">
+        <div class="project-number">1</div>
+        <div class="project-content">
+          <h3 class="project-title">Project Scope</h3>
+          <p class="project-desc">Briefly describe what you are building and what success looks like.</p>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-number">2</div>
+        <div class="project-content">
+          <h3 class="project-title">Technical Context</h3>
+          <p class="project-desc">Share your current stack, constraints, and preferred technologies.</p>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-number">3</div>
+        <div class="project-content">
+          <h3 class="project-title">Timeline</h3>
+          <p class="project-desc">Mention expected milestones and any launch deadlines.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <h3>Let us discuss your requirements</h3>
+        <p>This contact form is intended for real project communication. Send clear details and you will receive a concise, technical response.</p>
+
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <span class="ci-label">Email</span>
+              <a href="mailto:contact@example.com" class="ci-value">contact@example.com</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <span class="ci-label">Location</span>
+              <span class="ci-value">Remote and Global</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <span class="ci-label">Response Time</span>
+              <span class="ci-value">Within 24 hours</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-social-row">
+          <a href="#" class="social-pill">GitHub</a>
+          <a href="#" class="social-pill">LinkedIn</a>
+          <a href="#" class="social-pill">Twitter</a>
+        </div>
+
+        <div class="availability-badge">
+          <span class="avail-dot"></span>
+          Open for new project discussions
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-wrap">
+        <form class="contact-form" method="POST" action="{{ url_for('public.contact') }}" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name <span class="req">*</span></label>
+              <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?">
+          </div>
+          <div class="form-group">
+            <label for="message">Message <span class="req">*</span></label>
+            <textarea id="message" name="message" rows="6" placeholder="Tell me about your project, idea, or question..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary btn-submit" id="submitBtn">
+            <span class="btn-text">Send Message</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const form = document.getElementById('contactForm');
+  const btn = document.getElementById('submitBtn');
+  form.addEventListener('submit', () => {
+    btn.querySelector('.btn-text').textContent = 'Sending...';
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}

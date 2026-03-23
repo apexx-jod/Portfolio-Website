@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Database (will be created in container)
+instance/*.db
+instance/uploads/*
+instance/resume/*
+
+# Logs
+*.log
+logs/
+
+# Documentation
+README.md
+*.md
+
+# Testing
+tests/
+test_*.py
+
+# CI/CD
+.github/
+.gitlab-ci.yml

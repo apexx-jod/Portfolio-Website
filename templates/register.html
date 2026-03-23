@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Register | Alex Porter{% endblock %}
+{% block content %}
+
+<section class="auth-section">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a href="{{ url_for('public.index') }}" class="nav-logo" style="font-size:1.8rem">AP<span class="dot">.</span></a>
+      <h1>Create Account</h1>
+      <p>Create your account to get started</p>
+    </div>
+    <form method="POST" action="{{ url_for('auth.register') }}" class="auth-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="yourname" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Min. 8 characters" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn-primary btn-submit">Create Account →</button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+  </div>
+</section>
+
+{% endblock %}

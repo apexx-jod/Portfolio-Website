@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Projects | Portfolio{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-tag">Portfolio</span>
+    <h1 class="page-title">All Projects</h1>
+    <p class="page-sub">A complete collection of production-style builds, practical prototypes, and full stack implementations.</p>
+  </div>
+</section>
+
+<section class="section alt-bg">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Overview</span>
+      <h2 class="section-title">What You Will Find Here</h2>
+      <p class="section-sub">Each project card summarizes the problem area, technical stack, and implementation direction.</p>
+    </div>
+    <div class="projects-grid">
+      <article class="project-card">
+        <div class="project-number">A</div>
+        <div class="project-content">
+          <h3 class="project-title">Backend Systems</h3>
+          <p class="project-desc">API design, business logic, database workflows, and server-side reliability.</p>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-number">B</div>
+        <div class="project-content">
+          <h3 class="project-title">Frontend Experiences</h3>
+          <p class="project-desc">Responsive interfaces, accessible navigation, and clear information architecture.</p>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-number">C</div>
+        <div class="project-content">
+          <h3 class="project-title">Deployment Practice</h3>
+          <p class="project-desc">Containerized delivery, environment configuration, and runtime hardening basics.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Filter Tabs -->
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      <button class="filter-btn" data-filter="featured">Featured</button>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="all-projects-grid" id="projectsGrid">
+      {% for project in projects %}
+      <article class="proj-item {% if project.featured %}is-featured{% endif %}" data-featured="{{ 'true' if project.featured else 'false' }}">
+        <div class="proj-header">
+          <div class="proj-meta">
+            <span class="proj-index">{{ '%02d'|format(loop.index) }}</span>
+            {% if project.featured %}
+            <span class="proj-badge">Featured</span>
+            {% endif %}
+          </div>
+          <div class="proj-actions-top">
+            {% if project.github_url and project.github_url != '#' %}
+            <a href="{{ project.github_url }}" target="_blank" class="icon-link" title="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+            {% endif %}
+            {% if project.live_url and project.live_url != '#' %}
+            <a href="{{ project.live_url }}" target="_blank" class="icon-link" title="Live Demo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <h3 class="proj-title">{{ project.title }}</h3>
+        <p class="proj-desc">{{ project.description }}</p>
+
+        <div class="proj-tech">
+          {% if project.tech_stack %}
+            {% for tech in project.tech_stack.split(',') %}
+            <span class="tech-chip">{{ tech.strip() }}</span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<!-- API Info Block -->
+<section class="section alt-bg">
+  <div class="container">
+    <div class="api-info-block">
+      <div class="api-info-text">
+        <span class="section-tag">Developer API</span>
+        <h3>Access Projects via REST API</h3>
+        <p>All project data is available through a public REST API. Integrate my portfolio into your apps.</p>
+      </div>
+      <div class="api-code-block">
+        <div class="api-code-header">
+          <span>REST Endpoints</span>
+          <span class="api-badge">JSON</span>
+        </div>
+        <pre><code><span class="kw">GET</span>  /api/projects
+<span class="kw">GET</span>  /api/projects/&lt;id&gt;
+<span class="kw">GET</span>  /api/skills
+<span class="kw">POST</span> /api/contact
+<span class="kw">POST</span> /api/newsletter</code></pre>
+        <a href="/api/projects" target="_blank" class="btn-outline" style="margin-top:1rem;display:inline-block;">Try the API →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projItems = document.querySelectorAll('.proj-item');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      projItems.forEach(item => {
+        if (filter === 'all' || (filter === 'featured' && item.dataset.featured === 'true')) {
+          item.style.display = '';
+          setTimeout(() => item.style.opacity = '1', 10);
+        } else {
+          item.style.opacity = '0';
+          setTimeout(() => item.style.display = 'none', 200);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

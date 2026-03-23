@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Alex Porter{% endblock %}
+{% block content %}
+
+<section class="admin-section">
+  <div class="container">
+
+    <div class="admin-header">
+      <div>
+        <span class="section-tag">Management</span>
+        <h1 class="page-title" style="margin-top:.25rem">Dashboard</h1>
+      </div>
+      <div class="admin-user">
+        <span>👋 Hello, <strong>{{ current_user.username }}</strong></span>
+        <a href="{{ url_for('auth.logout') }}" class="btn-outline" style="padding:.4rem 1rem;font-size:.85rem">Logout</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="admin-stats" style="grid-template-columns:repeat(6,1fr)">
+      <div class="admin-stat-card">
+        <div class="asc-icon">📁</div>
+        <div class="asc-data"><span class="asc-num">{{ projects|length }}</span><span class="asc-label">Projects</span></div>
+      </div>
+      <div class="admin-stat-card {% if unread > 0 %}highlight{% endif %}">
+        <div class="asc-icon">✉️</div>
+        <div class="asc-data"><span class="asc-num">{{ unread }}</span><span class="asc-label">Unread</span></div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-icon">✍️</div>
+        <div class="asc-data"><span class="asc-num">{{ posts|length }}</span><span class="asc-label">Blog Posts</span></div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-icon">📬</div>
+        <div class="asc-data"><span class="asc-num">{{ subscribers }}</span><span class="asc-label">Subscribers</span></div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-icon">🖼️</div>
+        <div class="asc-data"><span class="asc-num">{{ gallery_count }}</span><span class="asc-label">Gallery</span></div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-icon">⭐</div>
+        <div class="asc-data"><span class="asc-num">{{ testimonials|length }}</span><span class="asc-label">Reviews</span></div>
+      </div>
+    </div>
+
+    <!-- API Bar -->
+    <div class="admin-api-bar">
+      <span>🔗 REST API:</span>
+      <a href="/api/projects" target="_blank" class="api-pill">GET /api/projects</a>
+      <a href="/api/skills" target="_blank" class="api-pill">GET /api/skills</a>
+      <a href="/api/blog" target="_blank" class="api-pill">GET /api/blog</a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="projects">Projects</button>
+      <button class="admin-tab" data-tab="messages">Messages{% if unread > 0 %} <span class="panel-badge">{{ unread }}</span>{% endif %}</button>
+      <button class="admin-tab" data-tab="blog">Blog Posts</button>
+      <button class="admin-tab" data-tab="testimonials">Testimonials</button>
+    </div>
+
+    <!-- Tab: Projects -->
+    <div class="admin-tab-panel active" id="tab-projects">
+      <div class="admin-panel">
+        <div class="panel-header"><h2>Projects</h2><span class="panel-count">{{ projects|length }}</span></div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>#</th><th>Title</th><th>Tech</th><th>Featured</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody>
+              {% for p in projects %}
+              <tr id="proj-{{ p.id }}">
+                <td class="td-num">{{ loop.index }}</td>
+                <td><strong>{{ p.title }}</strong></td>
+                <td><div class="td-chips">{% if p.tech_stack %}{% for t in p.tech_stack.split(',')[:3] %}<span class="tech-chip mini">{{ t.strip() }}</span>{% endfor %}{% endif %}</div></td>
+                <td>{% if p.featured %}<span class="status-badge status-yes">Yes</span>{% else %}<span class="status-badge status-no">No</span>{% endif %}</td>
+                <td class="td-date">{{ p.created_at.strftime('%b %d, %Y') }}</td>
+                <td><button class="action-btn danger" onclick="deleteProject({{ p.id }})">Delete</button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Messages -->
+    <div class="admin-tab-panel" id="tab-messages">
+      <div class="admin-panel">
+        <div class="panel-header"><h2>Contact Messages</h2>{% if unread > 0 %}<span class="panel-badge">{{ unread }} new</span>{% endif %}</div>
+        {% if messages %}
+        <div class="messages-list">
+          {% for msg in messages %}
+          <div class="msg-card {% if not msg.read %}unread{% endif %}" id="msg-{{ msg.id }}">
+            <div class="msg-header">
+              <div class="msg-sender"><strong>{{ msg.name }}</strong><span class="msg-email">{{ msg.email }}</span></div>
+              <div class="msg-meta">
+                <span class="msg-date">{{ msg.created_at.strftime('%b %d') }}</span>
+                {% if not msg.read %}<span class="unread-dot"></span>{% endif %}
+              </div>
+            </div>
+            {% if msg.subject %}<p class="msg-subject">{{ msg.subject }}</p>{% endif %}
+            <p class="msg-body">{{ msg.message[:140] }}{% if msg.message|length > 140 %}…{% endif %}</p>
+            <div class="msg-actions">
+              {% if not msg.read %}<button class="action-btn" onclick="markRead({{ msg.id }})">Mark Read</button>{% endif %}
+              <button class="action-btn danger" onclick="deleteMessage({{ msg.id }})">Delete</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state"><span>📭</span><p>No messages yet</p></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tab: Blog -->
+    <div class="admin-tab-panel" id="tab-blog">
+      <div class="admin-panel">
+        <div class="panel-header">
+          <h2>Blog Posts</h2>
+          <a href="{{ url_for('admin.create_post') }}" class="btn-primary" style="padding:.4rem 1rem;font-size:.85rem">+ New Post</a>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>#</th><th>Title</th><th>Tags</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              {% for post in posts %}
+              <tr id="post-{{ post.id }}">
+                <td class="td-num">{{ loop.index }}</td>
+                <td>
+                  <strong>{{ post.title }}</strong>
+                  <a href="{{ url_for('public.blog_post', slug=post.slug) }}" target="_blank" style="font-size:.75rem;color:var(--accent);margin-left:.5rem">↗</a>
+                </td>
+                <td><div class="td-chips">{% if post.tags %}{% for t in post.tags.split(',')[:3] %}<span class="tech-chip mini">{{ t.strip() }}</span>{% endfor %}{% endif %}</div></td>
+                <td>{% if post.published %}<span class="status-badge status-yes">Published</span>{% else %}<span class="status-badge status-no">Draft</span>{% endif %}</td>
+                <td class="td-date">{{ post.created_at.strftime('%b %d, %Y') }}</td>
+                <td style="display:flex;gap:.4rem">
+                  <a href="{{ url_for('admin.edit_post', post_id=post.id) }}" class="action-btn">Edit</a>
+                  <button class="action-btn danger" onclick="deletePost({{ post.id }})">Delete</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Testimonials -->
+    <div class="admin-tab-panel" id="tab-testimonials">
+      <div class="admin-panel">
+        <div class="panel-header"><h2>Testimonials</h2><span class="panel-count">{{ testimonials|length }}</span></div>
+        <div class="messages-list">
+          {% for t in testimonials %}
+          <div class="msg-card" id="test-{{ t.id }}">
+            <div class="msg-header">
+              <div class="msg-sender">
+                <strong>{{ t.name }}</strong>
+                <span class="msg-email">{{ t.title }}{% if t.company %} · {{ t.company }}{% endif %}</span>
+              </div>
+              <div class="msg-meta">
+                <span style="color:#f59e0b;font-size:.9rem">{% for i in range(t.rating) %}★{% endfor %}</span>
+                {% if t.approved %}<span class="status-badge status-yes">Visible</span>{% else %}<span class="status-badge status-no">Hidden</span>{% endif %}
+              </div>
+            </div>
+            <p class="msg-body">"{{ t.quote }}"</p>
+            <div class="msg-actions">
+              <button class="action-btn" onclick="toggleTestimonial({{ t.id }})">Toggle Visibility</button>
+              <button class="action-btn danger" onclick="deleteTestimonial({{ t.id }})">Delete</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+async function markRead(id) {
+  const res = await fetch(`/admin/message/${id}/read`, { method:'POST' });
+  if (res.ok) { const c = document.getElementById(`msg-${id}`); c.classList.remove('unread'); c.querySelector('.unread-dot')?.remove(); c.querySelector('[onclick^="markRead"]')?.remove(); }
+}
+async function deleteMessage(id) {
+  if (!confirm('Delete this message?')) return;
+  const res = await fetch(`/admin/message/${id}/delete`, { method:'POST' });
+  if (res.ok) document.getElementById(`msg-${id}`).remove();
+}
+async function deleteProject(id) {
+  if (!confirm('Delete this project?')) return;
+  const res = await fetch(`/api/projects/${id}`, { method:'DELETE' });
+  if (res.ok) document.getElementById(`proj-${id}`).remove();
+}
+async function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  const res = await fetch(`/admin/blog/${id}/delete`, { method:'POST' });
+  if (res.ok) document.getElementById(`post-${id}`).remove();
+}
+async function toggleTestimonial(id) {
+  const res = await fetch(`/admin/testimonial/${id}/toggle`, { method:'POST' });
+  if (res.ok) { const d = await res.json(); const b = document.querySelector(`#test-${id} .status-badge`); b.className = `status-badge ${d.approved?'status-yes':'status-no'}`; b.textContent = d.approved?'Visible':'Hidden'; }
+}
+async function deleteTestimonial(id) {
+  if (!confirm('Delete this testimonial?')) return;
+  const res = await fetch(`/admin/testimonial/${id}/delete`, { method:'POST' });
+  if (res.ok) document.getElementById(`test-${id}`).remove();
+}
+</script>
+{% endblock %}

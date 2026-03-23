@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Gallery | Alex Porter{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem">
+    <div>
+      <span class="section-tag">Visual</span>
+      <h1 class="page-title">Portfolio Gallery</h1>
+      <p class="page-sub">Screenshots, designs, and visual work from my projects.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Category Filter -->
+    {% if categories %}
+    <div class="filter-bar">
+      <a href="{{ url_for('public.gallery') }}" class="filter-btn {% if not active_cat %}active{% endif %}">All</a>
+      {% for cat in categories %}
+      <a href="{{ url_for('public.gallery', cat=cat) }}" class="filter-btn {% if active_cat == cat %}active{% endif %}">{{ cat }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if images %}
+    <div class="gallery-grid" id="galleryGrid">
+      {% for img in images %}
+      <div class="gallery-item" id="gimg-{{ img.id }}">
+        <div class="gallery-img-wrap" onclick="openLightbox('{{ url_for('static', filename='uploads/' + img.filename) }}', '{{ img.caption or '' }}')">
+          <img src="{{ url_for('static', filename='uploads/' + img.filename) }}" alt="{{ img.caption or 'Gallery image' }}" loading="lazy">
+          <div class="gallery-overlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+          </div>
+        </div>
+        <div class="gallery-info">
+          <div>
+            {% if img.caption %}<p class="gallery-caption">{{ img.caption }}</p>{% endif %}
+            <span class="gallery-cat-tag">{{ img.category }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding:5rem 0;text-align:center">
+      <span style="font-size:3rem;display:block;margin-bottom:1rem">🖼️</span>
+      <h3 style="font-family:var(--font-display);margin-bottom:.5rem">No images yet</h3>
+      <p style="color:var(--ink-3)">Check back soon!</p>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <img id="lightboxImg" src="" alt="">
+    <p id="lightboxCaption" class="lightbox-caption"></p>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openLightbox(src, caption) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+{% endblock %}

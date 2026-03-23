@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | Portfolio{% endblock %}
+{% block content %}
+
+<article class="post-page">
+  <!-- Header -->
+  <header class="post-header">
+    <div class="container post-header-inner">
+      <a href="{{ url_for('public.blog') }}" class="back-link">← Back to Blog</a>
+      <div class="post-meta-top">
+        <span class="blog-date">{{ post.created_at.strftime('%B %d, %Y') }}</span>
+        {% if post.tags %}
+          {% for tag in post.tags.split(',') %}
+          <a href="{{ url_for('public.blog', tag=tag.strip()) }}" class="blog-tag">{{ tag.strip() }}</a>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <h1 class="post-title">{{ post.title }}</h1>
+      {% if post.excerpt %}
+      <p class="post-excerpt">{{ post.excerpt }}</p>
+      {% endif %}
+      <div class="post-author-row">
+        <div class="author-avatar lg">{{ post.author.username[0].upper() if post.author else 'A' }}</div>
+        <div>
+          <span class="author-name">{{ post.author.username if post.author else 'Site Editorial' }}</span>
+          <span class="author-role">Engineering Notes</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="container post-layout">
+    <div class="post-content" id="postContent">
+      {{ post.content | safe }}
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="post-sidebar">
+      <div class="sidebar-card">
+        <h4>About the Author</h4>
+        <div class="author-avatar lg" style="margin-bottom:.75rem">{{ post.author.username[0].upper() if post.author else 'A' }}</div>
+        <p>This article is part of a practical knowledge base focused on production-ready web development and software delivery.</p>
+        <a href="{{ url_for('public.contact') }}" class="btn-outline" style="margin-top:1rem;display:block;text-align:center">Get in touch →</a>
+      </div>
+
+      {% if related %}
+      <div class="sidebar-card">
+        <h4>More Articles</h4>
+        {% for rp in related %}
+        <a href="{{ url_for('public.blog_post', slug=rp.slug) }}" class="related-post-link">
+          <span class="rp-title">{{ rp.title }}</span>
+          <span class="rp-date">{{ rp.created_at.strftime('%b %d') }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="sidebar-card nl-sidebar">
+        <h4>Stay Updated</h4>
+        <p>Receive new technical articles and implementation-focused updates.</p>
+        <form method="POST" action="{{ url_for('public.newsletter_subscribe') }}" style="margin-top:.75rem">
+          <input type="email" name="email" placeholder="your@email.com" required style="width:100%;margin-bottom:.5rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.875rem;">
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:.65rem">Subscribe →</button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</article>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Render markdown-style code blocks with basic highlighting
+const content = document.getElementById('postContent');
+if (content) {
+  // Wrap ``` code blocks in <pre><code>
+  content.innerHTML = content.innerHTML
+    .replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
+      `<pre class="code-block"><code>${code.trim().replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`)
+    .replace(/\n## (.*)/g, '<h2>$1</h2>')
+    .replace(/\n### (.*)/g, '<h3>$1</h3>')
+    .replace(/\n\n/g, '</p><p>');
+}
+</script>
+{% endblock %}

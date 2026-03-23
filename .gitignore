@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Flask
+instance/
+.webassets-cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+.flaskenv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+instance/uploads/*
+!instance/uploads/.gitkeep
+
+# Resume
+instance/resume/*
+!instance/resume/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Node (if using frontend build tools)
+node_modules/
+npm-debug.log
+yarn-error.log
